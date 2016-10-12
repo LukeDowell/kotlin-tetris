@@ -1,6 +1,6 @@
 package org.badgrades.tetris.model
 
-import java.awt.Color
+import com.badlogic.gdx.graphics.Color
 import java.awt.Point
 
 /**
@@ -24,29 +24,25 @@ enum class BlockType(val color: Color, val offsets: List<Point>) {
     /**
      *  = + + +
      */
-    I(Color.CYAN,
-            listOf(Point(1, 0), Point(2, 0), Point(3, 0))),
+    I(Color.CYAN, listOf(Point(1, 0), Point(2, 0), Point(3, 0))),
 
     /**
      *  =  +
      *  +  +
      */
-    O(Color.YELLOW,
-            listOf(Point(1, 0), Point(0, 1), Point(0, 26))),
+    O(Color.YELLOW, listOf(Point(1, 0), Point(0, 1), Point(0, 26))),
 
     /**
      *      =
      *   +  +  +
      */
-    T(Color.MAGENTA,
-            listOf(Point(-1, 1), Point(0, 1), Point(1, 1))),
+    T(Color.MAGENTA, listOf(Point(-1, 1), Point(0, 1), Point(1, 1))),
 
     /**
      *     + =
      *   + +
      */
-    S(Color.GREEN,
-            listOf(Point(-1, 0), Point(-1, 1), Point(-2, -1))),
+    S(Color.GREEN, listOf(Point(-1, 0), Point(-1, 1), Point(-2, -1))),
 
     /**
      *
@@ -54,22 +50,19 @@ enum class BlockType(val color: Color, val offsets: List<Point>) {
      *    + +
      *
      */
-    Z(Color.RED,
-            listOf(Point(1, 0), Point(1, 1), Point(2, 1))),
+    Z(Color.RED, listOf(Point(1, 0), Point(1, 1), Point(2, 1))),
 
     /**
      *     =
      *     +
      *   + +
      */
-    J(Color.BLUE,
-            listOf(Point(0, 1), Point(0, 2), Point(-1, 2))),
+    J(Color.BLUE, listOf(Point(0, 1), Point(0, 2), Point(-1, 2))),
 
     /**
      *   =
      *   +
      *   + +
      */
-    L(Color.ORANGE,
-            listOf(Point(0, 1), Point(0, 2), Point(1, 2))),
+    L(Color.ORANGE, listOf(Point(0, 1), Point(0, 2), Point(1, 2))),
 }

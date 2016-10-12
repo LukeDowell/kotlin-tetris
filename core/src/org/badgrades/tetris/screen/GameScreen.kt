@@ -1,34 +1,50 @@
 package org.badgrades.tetris.screen
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
+import org.badgrades.tetris.InputHandler
+import org.badgrades.tetris.world.GameRenderer
+import org.badgrades.tetris.TetrisGame
+import org.badgrades.tetris.world.TetrisWorld
 
-class GameScreen : Screen {
+class GameScreen(val tetrisGame: TetrisGame, val tetrisWorld: TetrisWorld) : Screen {
+
+    val renderer: GameRenderer
+    var runTime: Float
+
+    init {
+        renderer = GameRenderer(tetrisWorld)
+        runTime = 0f
+        Gdx.input.inputProcessor = InputHandler(tetrisWorld)
+    }
 
     override fun show() {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun pause() {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun resize(width: Int, height: Int) {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun hide() {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun render(delta: Float) {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+        runTime += delta
+        tetrisWorld.update(delta)
+        renderer.render(delta, runTime)
     }
 
     override fun resume() {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun dispose() {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 }
