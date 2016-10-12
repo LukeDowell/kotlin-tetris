@@ -1,8 +1,10 @@
 package org.badgrades.tetris.world
 
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 
@@ -16,6 +18,7 @@ class GameRenderer(val tetrisWorld: TetrisWorld) {
     val camera: OrthographicCamera
     val shapeRenderer: ShapeRenderer
     val batch: SpriteBatch
+    val font: BitmapFont
 
     companion object {
         /** The value we use to convert from game units to visual units */
@@ -23,10 +26,13 @@ class GameRenderer(val tetrisWorld: TetrisWorld) {
     }
 
     init {
+        font = BitmapFont()
+        font.color = Color.WHITE
         camera = OrthographicCamera(
-                Gdx.graphics.width.toFloat(),
-                Gdx.graphics.height.toFloat()
+                TetrisWorld.GRID_WIDTH * VISUAL_UNITS,
+                TetrisWorld.GRID_HEIGHT * VISUAL_UNITS
         )
+        camera.setToOrtho(false)
 
         shapeRenderer = ShapeRenderer()
         shapeRenderer.projectionMatrix = camera.combined
@@ -36,6 +42,7 @@ class GameRenderer(val tetrisWorld: TetrisWorld) {
     }
 
     fun render(delta: Float, runTime: Float) {
+        camera.update()
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
@@ -48,13 +55,31 @@ class GameRenderer(val tetrisWorld: TetrisWorld) {
             it.cells.forEach {
                 shapeRenderer.color = color
                 shapeRenderer.rect(
-                    it.x * VISUAL_UNITS,
-                    it.y * VISUAL_UNITS,
+                    (it.x * VISUAL_UNITS),
+                    it.y * VISUAL_UNITS - (VISUAL_UNITS / 2),
                     VISUAL_UNITS,
                     VISUAL_UNITS
                 )
             }
         }
         shapeRenderer.end()
+
+
+        batch.begin()
+
+        // For each block
+        tetrisWorld.blocks.forEach {
+            // Draw each cell
+            it.cells.forEach {
+                // Debug text
+                font.draw(
+                        batch,
+                        "${it.x},${it.y}",
+                        it.x * VISUAL_UNITS,
+                        it.y * VISUAL_UNITS
+                )
+            }
+        }
+        batch.end()
     }
 }
