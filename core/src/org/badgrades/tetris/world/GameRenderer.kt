@@ -27,7 +27,6 @@ class GameRenderer(val tetrisWorld: TetrisWorld) {
                 Gdx.graphics.width.toFloat(),
                 Gdx.graphics.height.toFloat()
         )
-        camera.setToOrtho(true)
 
         shapeRenderer = ShapeRenderer()
         shapeRenderer.projectionMatrix = camera.combined
