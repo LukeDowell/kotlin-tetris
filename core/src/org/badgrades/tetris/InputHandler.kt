@@ -1,5 +1,6 @@
 package org.badgrades.tetris
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.InputAdapter
 import org.badgrades.tetris.world.TetrisWorld
@@ -24,7 +25,10 @@ class InputHandler(val tetrisWorld: TetrisWorld) : InputAdapter() {
                 true
             }
             Input.Keys.SPACE -> {
-                tetrisWorld.getPlayerBlock().rotate()
+                if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT))
+                    tetrisWorld.attemptToRotate()
+                else
+                    tetrisWorld.attemptToRotate(clockwise = false)
                 true
             }
             else -> false

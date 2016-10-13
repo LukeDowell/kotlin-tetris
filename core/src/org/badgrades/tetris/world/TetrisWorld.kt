@@ -65,17 +65,11 @@ class TetrisWorld {
         // Check for OOB block / game over
     }
 
-    /**
-     *
-     */
     fun attemptToMove(dx: Int, dy: Int, block : Block = getPlayerBlock()) {
         if(canBlockMove(dx, dy, block))
             block.move(dx, dy)
     }
 
-    /**
-     *
-     */
     fun canBlockMove(dx: Int, dy: Int, block : Block) : Boolean {
         val blockClone = block.clone()
         blockClone.move(dx, dy)
@@ -98,9 +92,11 @@ class TetrisWorld {
         return true
     }
 
-    fun attemptToRotate() {
-        val block = getPlayerBlock()
-
+    /**
+     * Wall kicks yo
+     */
+    fun attemptToRotate(block : Block = getPlayerBlock(), clockwise : Boolean = true) {
+        block.rotate(clockwise)
     }
 
     fun getPlayerBlock() : Block = blocks.last()

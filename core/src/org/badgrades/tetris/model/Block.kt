@@ -40,7 +40,7 @@ class Block(val blockType: BlockType, startingPosition: Point) : Cloneable {
      * Rotation source:
      * http://stackoverflow.com/questions/9985473/java-rotate-point-around-another-by-specified-degree-value
      */
-    fun rotate(clockwise: Boolean = true) {
+    fun rotate(clockwise : Boolean) {
         val center = cells[1]
         val radians: Double
 
