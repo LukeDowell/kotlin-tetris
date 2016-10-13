@@ -9,16 +9,34 @@ class BlockTests {
 
     @Test fun `I Block cell initialization`() {
         val iBlock = Block(BlockType.I, Point(1, 0))
-        assertThat(iBlock.cells,
-                `is`(mutableListOf(Point(1,0), Point(2,0), Point(3,0), Point(4,0))))
+        val iBlockMutableList = mutableListOf(Point(1,0), Point(2,0), Point(3,0), Point(4,0))
+        assertThat(
+                iBlock.cells,
+                `is`(iBlockMutableList)
+        )
     }
 
     @Test fun `I Block cell rotation`() {
-        val iBlock = Block(BlockType.I, Point(5, 5))
+        // TODO
+    }
 
-        iBlock.cells.forEach { cell -> println(cell) }
-        iBlock.rotate(clockwise = false)
-        println("--- POST ROTATE --- ")
-        iBlock.cells.forEach { cell -> println(cell) }
+    @Test fun `block should intersect`() {
+        val iBlock = Block(BlockType.I, Point(4, 4))
+        val zBlock = Block(BlockType.Z, Point(4, 4))
+
+        assertThat(
+                iBlock.intersectsWith(zBlock),
+                `is`(true)
+        )
+    }
+
+    @Test fun `block should not intersect`() {
+        val iBlock = Block(BlockType.I, Point(0, 0))
+        val zBlock = Block(BlockType.Z, Point(6, 6))
+
+        assertThat(
+                iBlock.intersectsWith(zBlock),
+                `is`(false)
+        )
     }
 }

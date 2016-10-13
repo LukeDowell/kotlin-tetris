@@ -27,6 +27,11 @@ class Block(val blockType: BlockType, startingPosition: Point) : Cloneable {
 
     fun move(dx: Int, dy: Int) = cells.forEach { it.translate(dx, dy) }
 
+    fun intersectsWith(block : Block) : Boolean {
+        // Create a list of cells whose points are the same as any in our list of cells
+        return block.cells.filter { cells.contains(it) }.size > 0
+    }
+
     /**
      *
      * Future consideration: How do we handle wall kicks?

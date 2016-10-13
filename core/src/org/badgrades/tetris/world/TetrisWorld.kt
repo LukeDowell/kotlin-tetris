@@ -48,6 +48,7 @@ class TetrisWorld {
 
     init {
         blocks.add(Block(BlockType.L, Point(5,5)))
+        blocks.add(Block(BlockType.Z, Point(5,15)))
     }
 
     fun update(delta: Float) {
@@ -88,7 +89,12 @@ class TetrisWorld {
         }
 
         // Intersect
-
+        blocks
+            .dropLast(1) // Remove the player block, it will always intersect with itself
+            .forEach {
+                if(blockClone.intersectsWith(it))
+                    return false
+            }
         return true
     }
 
