@@ -12,7 +12,7 @@ import java.awt.geom.AffineTransform
  * an I block type should know that it is 4 cells in a line, so that when we create a new block the list of points can
  * be automatically populated / calculated based on some offsets stored in the blocktype enum.
  */
-class Block(val blockType: BlockType, startingPosition: Point) {
+class Block(val blockType: BlockType, startingPosition: Point) : Cloneable {
 
     val cells: MutableList<Point>
 
@@ -37,8 +37,8 @@ class Block(val blockType: BlockType, startingPosition: Point) {
      */
     fun rotate(clockwise: Boolean = true) {
         val center = cells[1]
-
         val radians: Double
+
         if(clockwise)
             radians = Math.toRadians(90.0)
         else
@@ -52,5 +52,13 @@ class Block(val blockType: BlockType, startingPosition: Point) {
 
         for(cell in cells)
             rotationInstance.transform(cell, cell)
+    }
+
+    // Is this is kind of weird, that you can modify the visibility of an interface method?
+    public override fun clone(): Block {
+        val clone = Block(blockType, Point(0,0))
+        clone.cells.clear()
+        this.cells.forEach { clone.cells.add(it.clone() as Point) }
+        return clone
     }
 }

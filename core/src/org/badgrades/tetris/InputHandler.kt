@@ -8,19 +8,19 @@ class InputHandler(val tetrisWorld: TetrisWorld) : InputAdapter() {
 
     override fun keyDown(keycode: Int) : Boolean = when(keycode) {
             Input.Keys.UP -> {
-                tetrisWorld.getPlayerBlock().move(0, 1)
+                tetrisWorld.attemptToMove(0, 1)
                 true
             }
             Input.Keys.RIGHT -> {
-                tetrisWorld.getPlayerBlock().move(1, 0)
+                tetrisWorld.attemptToMove(1, 0)
                 true
             }
             Input.Keys.DOWN -> {
-                tetrisWorld.getPlayerBlock().move(0, -1)
+                tetrisWorld.attemptToMove(0, -1)
                 true
             }
             Input.Keys.LEFT -> {
-                tetrisWorld.getPlayerBlock().move(-1, 0)
+                tetrisWorld.attemptToMove(-1, 0)
                 true
             }
             Input.Keys.SPACE -> {

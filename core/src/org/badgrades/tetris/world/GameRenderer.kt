@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import java.awt.Point
 
 /**
  * How are we going to draw a tetris block in between cells? We don't want
@@ -26,37 +27,38 @@ class GameRenderer(val tetrisWorld: TetrisWorld) {
     }
 
     init {
-        font = BitmapFont()
-        font.color = Color.WHITE
         camera = OrthographicCamera(
-                TetrisWorld.GRID_WIDTH * VISUAL_UNITS,
-                TetrisWorld.GRID_HEIGHT * VISUAL_UNITS
+                Gdx.graphics.width.toFloat(),
+                Gdx.graphics.height.toFloat()
         )
-        camera.setToOrtho(false)
+        camera.setToOrtho(false) // Move 0,0 to bottom left
+        camera.update()
 
         shapeRenderer = ShapeRenderer()
         shapeRenderer.projectionMatrix = camera.combined
 
         batch = SpriteBatch()
         batch.projectionMatrix = camera.combined
+
+        font = BitmapFont()
+        font.color = Color.WHITE
     }
 
     fun render(delta: Float, runTime: Float) {
-        camera.update()
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
 
         // For each block
-        tetrisWorld.blocks.forEach {
-            val color = it.blockType.color
+        tetrisWorld.blocks.forEach { block ->
+            val color = block.blockType.color
             // Draw each cell
-            it.cells.forEach {
+            block.cells.forEach { cell: Point ->
                 shapeRenderer.color = color
                 shapeRenderer.rect(
-                    (it.x * VISUAL_UNITS),
-                    it.y * VISUAL_UNITS - (VISUAL_UNITS / 2),
+                    (cell.x * VISUAL_UNITS),
+                    cell.y * VISUAL_UNITS - (VISUAL_UNITS / 2),
                     VISUAL_UNITS,
                     VISUAL_UNITS
                 )
@@ -64,7 +66,7 @@ class GameRenderer(val tetrisWorld: TetrisWorld) {
         }
         shapeRenderer.end()
 
-
+        // Note: Can't embed shapeRenderer.begin() and batch.begin(), only the first one will draw
         batch.begin()
 
         // For each block

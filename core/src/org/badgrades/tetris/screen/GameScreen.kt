@@ -18,33 +18,16 @@ class GameScreen(val tetrisGame: TetrisGame, val tetrisWorld: TetrisWorld) : Scr
         Gdx.input.inputProcessor = InputHandler(tetrisWorld)
     }
 
-    override fun show() {
-
-    }
-
-    override fun pause() {
-
-    }
-
-    override fun resize(width: Int, height: Int) {
-
-    }
-
-    override fun hide() {
-
-    }
-
     override fun render(delta: Float) {
         runTime += delta
         tetrisWorld.update(delta)
         renderer.render(delta, runTime)
     }
 
-    override fun resume() {
-
-    }
-
-    override fun dispose() {
-
-    }
+    override fun show() { }
+    override fun pause() { }
+    override fun resize(width: Int, height: Int) { }
+    override fun hide() { }
+    override fun resume() { }
+    override fun dispose() { }
 }

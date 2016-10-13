@@ -59,8 +59,42 @@ class TetrisWorld {
         }
 
         // Check for tetris
+        // lol how
 
         // Check for OOB block / game over
+    }
+
+    /**
+     *
+     */
+    fun attemptToMove(dx: Int, dy: Int, block : Block = getPlayerBlock()) {
+        if(canBlockMove(dx, dy, block))
+            block.move(dx, dy)
+    }
+
+    /**
+     *
+     */
+    fun canBlockMove(dx: Int, dy: Int, block : Block) : Boolean {
+        val blockClone = block.clone()
+        blockClone.move(dx, dy)
+
+        // Bounds
+        blockClone.cells.forEach {
+            if(it.x > (GRID_WIDTH - 1)
+                    || it.x < 0
+                    || it.y < 1)
+                return false
+        }
+
+        // Intersect
+
+        return true
+    }
+
+    fun attemptToRotate() {
+        val block = getPlayerBlock()
+
     }
 
     fun getPlayerBlock() : Block = blocks.last()
