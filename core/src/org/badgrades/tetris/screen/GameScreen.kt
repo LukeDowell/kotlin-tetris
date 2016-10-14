@@ -2,27 +2,30 @@ package org.badgrades.tetris.screen
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
+import org.badgrades.tetris.GameHandler
 import org.badgrades.tetris.InputHandler
 import org.badgrades.tetris.world.GameRenderer
 import org.badgrades.tetris.TetrisGame
+import org.badgrades.tetris.model.Block
 import org.badgrades.tetris.world.TetrisWorld
 
 class GameScreen(val tetrisGame: TetrisGame, val tetrisWorld: TetrisWorld) : Screen {
 
     val renderer: GameRenderer
-    var runTime: Float
+    val gameHandler: GameHandler
 
     init {
+        gameHandler = GameHandler(tetrisWorld)
         renderer = GameRenderer(tetrisWorld)
-        runTime = 0f
-        Gdx.input.inputProcessor = InputHandler(tetrisWorld)
+        Gdx.input.inputProcessor = InputHandler(gameHandler)
     }
 
     override fun render(delta: Float) {
-        runTime += delta
-        tetrisWorld.update(delta)
-        renderer.render(delta, runTime)
+        gameHandler.update(delta)
+        renderer.render(delta)
     }
+
+
 
     override fun show() { }
     override fun pause() { }

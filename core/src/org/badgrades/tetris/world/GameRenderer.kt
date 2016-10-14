@@ -44,7 +44,7 @@ class GameRenderer(val tetrisWorld: TetrisWorld) {
         font.color = Color.WHITE
     }
 
-    fun render(delta: Float, runTime: Float) {
+    fun render(delta: Float) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f)
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
@@ -65,23 +65,5 @@ class GameRenderer(val tetrisWorld: TetrisWorld) {
             }
         }
         shapeRenderer.end()
-
-        // Note: Can't embed shapeRenderer.begin() and batch.begin(), only the first one will draw
-        batch.begin()
-
-        // For each block
-        tetrisWorld.blocks.forEach {
-            // Draw each cell
-            it.cells.forEach {
-                // Debug text
-                font.draw(
-                        batch,
-                        "${it.x},${it.y}",
-                        it.x * VISUAL_UNITS,
-                        it.y * VISUAL_UNITS
-                )
-            }
-        }
-        batch.end()
     }
 }

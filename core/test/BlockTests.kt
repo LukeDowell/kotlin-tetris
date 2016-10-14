@@ -39,4 +39,12 @@ class BlockTests {
                 `is`(false)
         )
     }
+
+    @Test fun `block should rotate`() {
+
+    }
+
+    @Test fun `block should not rotate`() {
+
+    }
 }
