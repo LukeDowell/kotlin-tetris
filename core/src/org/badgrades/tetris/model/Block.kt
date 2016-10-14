@@ -44,7 +44,7 @@ class Block(val blockType: BlockType, startingPosition: Point) : Cloneable {
         val center = cells[1]
         val radians: Double
 
-        if(clockwise)
+        if(clockwise) // I think this might be backwards
             radians = Math.toRadians(90.0)
         else
             radians = Math.toRadians(-90.0)

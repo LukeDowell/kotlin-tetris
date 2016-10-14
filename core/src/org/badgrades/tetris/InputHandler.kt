@@ -16,7 +16,7 @@ class InputHandler(val gameHandler: GameHandler) : InputAdapter() {
                 true
             }
             Input.Keys.DOWN -> {
-                gameHandler.attemptToMove(0, -1)
+                gameHandler.gravityPeriod = 0.1f
                 true
             }
             Input.Keys.LEFT -> {
@@ -32,4 +32,12 @@ class InputHandler(val gameHandler: GameHandler) : InputAdapter() {
             }
             else -> false
         }
+
+    override fun keyUp(keycode: Int): Boolean = when(keycode) {
+        Input.Keys.DOWN -> {
+            gameHandler.gravityPeriod = 1f
+            true
+        }
+        else -> false
+    }
 }

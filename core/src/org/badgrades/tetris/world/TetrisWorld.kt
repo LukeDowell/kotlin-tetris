@@ -33,9 +33,4 @@ class TetrisWorld {
         const val GRID_HEIGHT = 20
         const val GRID_WIDTH = 10
     }
-
-    init {
-        blocks.add(Block(BlockType.L, Point(5,5)))
-        blocks.add(Block(BlockType.Z, Point(5,15)))
-    }
 }

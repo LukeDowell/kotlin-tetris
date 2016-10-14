@@ -30,7 +30,7 @@ enum class BlockType(val color: Color, val offsets: List<Point>) {
      *  =  +
      *  +  +
      */
-    O(Color.YELLOW, listOf(Point(1, 0), Point(0, 1), Point(0, 26))),
+    O(Color.YELLOW, listOf(Point(1, 0), Point(0, -1), Point(1, -1))),
 
     /**
      *      =
@@ -42,7 +42,7 @@ enum class BlockType(val color: Color, val offsets: List<Point>) {
      *     + =
      *   + +
      */
-    S(Color.GREEN, listOf(Point(-1, 0), Point(-1, 1), Point(-2, -1))),
+    S(Color.GREEN, listOf(Point(-1, 0), Point(-1, -1), Point(-2, -1))),
 
     /**
      *
