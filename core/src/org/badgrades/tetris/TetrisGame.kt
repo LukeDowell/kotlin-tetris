@@ -6,6 +6,10 @@ import org.badgrades.tetris.world.TetrisWorld
 
 class TetrisGame : Game() {
 
+    companion object {
+        var score = 0
+    }
+
     override fun create() {
         setScreen(GameScreen(this, TetrisWorld()))
     }

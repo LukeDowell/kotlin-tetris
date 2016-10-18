@@ -25,8 +25,6 @@ class GameScreen(val tetrisGame: TetrisGame, val tetrisWorld: TetrisWorld) : Scr
         renderer.render(delta)
     }
 
-
-
     override fun show() { }
     override fun pause() { }
     override fun resize(width: Int, height: Int) { }

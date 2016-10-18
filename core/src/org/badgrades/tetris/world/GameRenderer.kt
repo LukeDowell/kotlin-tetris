@@ -5,14 +5,19 @@ import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.BitmapFont
+import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.utils.Align
+import org.badgrades.tetris.TetrisGame
 import java.awt.Point
 
 /**
  * How are we going to draw a tetris block in between cells? We don't want
  * our game to be jerky, we want a smooth animation. It will also make the
  * force-drop look a lot better. Maybe LibGDX tweening is the answer
+ *
+ * just kidding it looks fine
  */
 class GameRenderer(val tetrisWorld: TetrisWorld) {
 
@@ -20,6 +25,7 @@ class GameRenderer(val tetrisWorld: TetrisWorld) {
     val shapeRenderer: ShapeRenderer
     val batch: SpriteBatch
     val font: BitmapFont
+    val scoreLayout: GlyphLayout
 
     companion object {
         /** The value we use to convert from game units to visual units */
@@ -42,6 +48,8 @@ class GameRenderer(val tetrisWorld: TetrisWorld) {
 
         font = BitmapFont()
         font.color = Color.WHITE
+
+        scoreLayout = GlyphLayout()
     }
 
     fun render(delta: Float) {
@@ -65,5 +73,22 @@ class GameRenderer(val tetrisWorld: TetrisWorld) {
             }
         }
         shapeRenderer.end()
+
+        batch.begin()
+        scoreLayout.setText(
+                font,
+                "Score: ${TetrisGame.score.toString()}",
+                Color.WHITE,
+                Gdx.graphics.width.toFloat(),
+                Align.center,
+                true
+        )
+        font.draw(
+                batch,
+                scoreLayout,
+                0f, // Text is the width of the screen so it's centered
+                14f
+        )
+        batch.end()
     }
 }
