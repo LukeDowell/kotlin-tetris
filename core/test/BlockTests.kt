@@ -47,4 +47,12 @@ class BlockTests {
     @Test fun `block should not rotate`() {
 
     }
+
+    @Test fun `tetris should exist`() {
+
+    }
+
+    @Test fun `tetris should not exist`() {
+
+    }
 }

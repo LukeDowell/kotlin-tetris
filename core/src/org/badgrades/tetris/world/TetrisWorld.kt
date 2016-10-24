@@ -1,5 +1,6 @@
 package org.badgrades.tetris.world
 
+import org.badgrades.tetris.extension.Array2D
 import org.badgrades.tetris.model.Block
 import org.badgrades.tetris.model.BlockType
 import java.awt.Point
@@ -32,5 +33,21 @@ class TetrisWorld {
         const val GRID_BUFFER = 4
         const val GRID_HEIGHT = 20
         const val GRID_WIDTH = 10
+    }
+
+    /**
+     * Generates a 2d matrix representing the game field. a 0 is an empty cell while a
+     * 1 is a cell occupied by a block
+     */
+    fun generateMatrix() : Array2D<Int> {
+        val matrix = Array2D<Int>(GRID_WIDTH, GRID_HEIGHT) { x, y -> 0 }
+
+        blocks.forEach { block ->
+            block.cells.forEach { cell ->
+                matrix[cell.x, cell.y] = 1
+            }
+        }
+
+        return matrix
     }
 }

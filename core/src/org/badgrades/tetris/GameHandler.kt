@@ -30,19 +30,27 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
         // Drop block
         timeToDrop += delta
         if(timeToDrop >= gravityPeriod) {
-            // Hm how can we tell the difference between hitting a wall and hitting another block?
-            // Should we separate attemptToMove into moveSideways and dropBlock?
+
             if(canDrop())
                 getPlayerBlock().move(0, -1)
             else
                 spawnBlock() // TODO turn into a queue so we can see the 'next' block
 
             timeToDrop = 0f
+
+            println(tetrisWorld.generateMatrix())
         }
 
         // Check for out of bounds / game over
 
         // Check for tetris
+    }
+
+    /**
+     * Returns a list of cells that comprise a tetris
+     */
+    fun getCellsInTetris() : List<Point> {
+
     }
 
     fun spawnBlock() = tetrisWorld.blocks.add(getRandomBlock())
@@ -55,7 +63,6 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
     fun canDrop(block: Block = getPlayerBlock()) : Boolean {
         val blockClone = block.clone()
         blockClone.move(0, -1)
-
         return isBlockPositionValid(blockClone)
     }
 
@@ -105,4 +112,11 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
 
 
     fun getPlayerBlock() : Block = tetrisWorld.blocks.last()
+
+    /**
+     * Gets a list of blocks THAT ARE NOT THE PLAYER that can also drop it like it's hotttt
+     */
+    fun getFallingBlocks() = tetrisWorld.blocks
+                .dropLast(1) // Remove player block
+                .filter { canDrop(it) }
 }

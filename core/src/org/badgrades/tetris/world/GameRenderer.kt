@@ -74,6 +74,23 @@ class GameRenderer(val tetrisWorld: TetrisWorld) {
         }
         shapeRenderer.end()
 
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
+        shapeRenderer.color = Color.BLACK
+
+        // For each block
+        tetrisWorld.blocks.forEach { block ->
+            // Draw each cell
+            block.cells.forEach { cell: Point ->
+                shapeRenderer.rect(
+                        (cell.x * VISUAL_UNITS),
+                        cell.y * VISUAL_UNITS - (VISUAL_UNITS / 2),
+                        VISUAL_UNITS,
+                        VISUAL_UNITS
+                )
+            }
+        }
+        shapeRenderer.end()
+
         batch.begin()
         scoreLayout.setText(
                 font,
