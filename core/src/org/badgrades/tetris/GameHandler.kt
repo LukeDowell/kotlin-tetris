@@ -1,6 +1,5 @@
 package org.badgrades.tetris
 
-import com.badlogic.gdx.Game
 import org.badgrades.tetris.model.Block
 import org.badgrades.tetris.model.BlockType
 import org.badgrades.tetris.world.TetrisWorld
@@ -59,15 +58,21 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
         if(yValuesWithTetris.isNotEmpty()) {
             TetrisGame.score += yValuesWithTetris.size * GameHandler.TETRIS_SCORE
 
-            // Remove blocks and drop them
+            // Gather
+            val allCells = mutableListOf<Point>()
+            tetrisWorld.blocks.forEach { allCells.addAll(it.cells) }
+
+            // Destroy
+            val cellsOnYAxis = allCells.filter { yValuesWithTetris.contains(it.y) }
+            tetrisWorld.blocks.forEach { it.cells.removeAll(cellsOnYAxis) }
         }
     }
 
-    fun getYValuesWithTetris() = (0..TetrisWorld.GRID_HEIGHT).filter { doesTetrisExistAtY(it) }
+    fun getYValuesWithTetris() = (0..TetrisWorld.GRID_HEIGHT-1).filter { doesTetrisExistAtY(it) }
 
     fun doesTetrisExistAtY(y: Int) : Boolean {
         val matrix = tetrisWorld.generateMatrix()
-        return (0..TetrisWorld.GRID_WIDTH).none { x -> matrix[x, y] != 1 }
+        return (0..TetrisWorld.GRID_WIDTH-1).none { x -> matrix[x, y] != 1 }
     }
 
     fun spawnBlock() = tetrisWorld.blocks.add(getRandomBlock())

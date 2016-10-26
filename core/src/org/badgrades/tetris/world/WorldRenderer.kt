@@ -106,6 +106,19 @@ class WorldRenderer(val tetrisWorld: TetrisWorld) {
                 0f, // Text is the width of the screen so it's centered
                 14f
         )
+
+        // For each block
+        tetrisWorld.blocks.forEach { block ->
+            // Draw each cell
+            block.cells.forEach { cell: Point ->
+                    font.draw(
+                        batch,
+                        "${cell.x}, ${cell.y}",
+                        (cell.x * VISUAL_UNITS),
+                        (cell.y * VISUAL_UNITS)
+                    )
+                }
+            }
         batch.end()
     }
 }
