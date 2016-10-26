@@ -16,8 +16,8 @@ import java.awt.Point
  * for the L block are (1, 0), (2, 0) and (3, 0). This would cause the cell positions of the L block to be
  * (1, 1), (2, 1), (3, 1) and (4, 1)
  *
- * For coordinate system see TetrisWorld and GameRenderer
- * @see org.badgrades.tetris.world.GameRenderer
+ * For coordinate system see TetrisWorld and WorldRenderer
+ * @see org.badgrades.tetris.world.WorldRenderer
  * @see org.badgrades.tetris.TetrisWorld
  */
 enum class BlockType(val color: Color, val offsets: List<Point>) {

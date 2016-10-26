@@ -4,19 +4,19 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Screen
 import org.badgrades.tetris.GameHandler
 import org.badgrades.tetris.InputHandler
-import org.badgrades.tetris.world.GameRenderer
+import org.badgrades.tetris.world.WorldRenderer
 import org.badgrades.tetris.TetrisGame
 import org.badgrades.tetris.model.Block
 import org.badgrades.tetris.world.TetrisWorld
 
 class GameScreen(val tetrisGame: TetrisGame, val tetrisWorld: TetrisWorld) : Screen {
 
-    val renderer: GameRenderer
+    val renderer: WorldRenderer
     val gameHandler: GameHandler
 
     init {
         gameHandler = GameHandler(tetrisWorld)
-        renderer = GameRenderer(tetrisWorld)
+        renderer = WorldRenderer(tetrisWorld)
         Gdx.input.inputProcessor = InputHandler(gameHandler)
     }
 

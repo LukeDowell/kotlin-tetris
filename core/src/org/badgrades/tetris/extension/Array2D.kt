@@ -35,4 +35,16 @@ class Array2D<T> (val xSize: Int, val ySize: Int, val array: Array<Array<T>>) {
     inline fun forEachIndexed(operation: (x: Int, y: Int, T) -> Unit) {
         array.forEachIndexed { x, p -> p.forEachIndexed { y, t -> operation.invoke(x, y, t) } }
     }
+
+    override fun toString(): String {
+        val sb = StringBuilder()
+        for (y in (ySize-1) downTo 0) {
+            for(x in 0..(xSize-1)) {
+                sb.append(" ${get(x, y)} ")
+            }
+            sb.append("\n")
+        }
+
+        return sb.toString()
+    }
 }

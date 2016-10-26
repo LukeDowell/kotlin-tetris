@@ -1,5 +1,6 @@
 package org.badgrades.tetris
 
+import com.badlogic.gdx.Game
 import org.badgrades.tetris.model.Block
 import org.badgrades.tetris.model.BlockType
 import org.badgrades.tetris.world.TetrisWorld
@@ -17,6 +18,11 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
 
     val startingBlockPosition: Point
 
+    companion object {
+        // TODO https://en.wikipedia.org/wiki/Tetris#Scoring
+        const val TETRIS_SCORE = 100
+    }
+
     init {
         startingBlockPosition = Point(
                 Math.round(TetrisWorld.GRID_WIDTH.toDouble() / 2).toInt(), // Kind of gross to have all this conversion
@@ -31,26 +37,37 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
         timeToDrop += delta
         if(timeToDrop >= gravityPeriod) {
 
-            if(canDrop())
+            if(canDrop()) {
                 getPlayerBlock().move(0, -1)
-            else
+            }
+            else {
                 spawnBlock() // TODO turn into a queue so we can see the 'next' block
+
+                if(!canDrop()) {
+                    // Game over
+                    System.exit(0)
+                }
+            }
 
             timeToDrop = 0f
 
-            println(tetrisWorld.generateMatrix())
+            println(tetrisWorld.generateMatrix().toString())
         }
 
-        // Check for out of bounds / game over
-
         // Check for tetris
+        val yValuesWithTetris = getYValuesWithTetris()
+        if(yValuesWithTetris.isNotEmpty()) {
+            TetrisGame.score += yValuesWithTetris.size * GameHandler.TETRIS_SCORE
+
+            // Remove blocks and drop them
+        }
     }
 
-    /**
-     * Returns a list of cells that comprise a tetris
-     */
-    fun getCellsInTetris() : List<Point> {
+    fun getYValuesWithTetris() = (0..TetrisWorld.GRID_HEIGHT).filter { doesTetrisExistAtY(it) }
 
+    fun doesTetrisExistAtY(y: Int) : Boolean {
+        val matrix = tetrisWorld.generateMatrix()
+        return (0..TetrisWorld.GRID_WIDTH).none { x -> matrix[x, y] != 1 }
     }
 
     fun spawnBlock() = tetrisWorld.blocks.add(getRandomBlock())

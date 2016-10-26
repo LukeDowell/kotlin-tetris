@@ -24,7 +24,7 @@ class Block(val blockType: BlockType, startingPosition: Point) : Cloneable {
 
     fun intersectsWith(block : Block) : Boolean {
         // Create a list of cells whose points are the same as any in our list of cells
-        return block.cells.filter { cells.contains(it) }.size > 0
+        return block.cells.filter { cells.contains(it) }.isNotEmpty()
     }
 
     /**

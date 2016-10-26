@@ -19,7 +19,7 @@ import java.awt.Point
  *
  * just kidding it looks fine
  */
-class GameRenderer(val tetrisWorld: TetrisWorld) {
+class WorldRenderer(val tetrisWorld: TetrisWorld) {
 
     val camera: OrthographicCamera
     val shapeRenderer: ShapeRenderer
@@ -94,7 +94,7 @@ class GameRenderer(val tetrisWorld: TetrisWorld) {
         batch.begin()
         scoreLayout.setText(
                 font,
-                "Score: ${TetrisGame.score.toString()}",
+                "Score: ${TetrisGame.score}",
                 Color.WHITE,
                 Gdx.graphics.width.toFloat(),
                 Align.center,
