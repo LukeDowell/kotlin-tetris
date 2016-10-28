@@ -27,8 +27,6 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
                 Math.round(TetrisWorld.GRID_WIDTH.toDouble() / 2).toInt(), // Kind of gross to have all this conversion
                 TetrisWorld.GRID_HEIGHT - 1
         )
-
-        spawnBlock()
     }
 
     fun update(delta: Float) {
@@ -65,6 +63,15 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
             // Destroy
             val cellsOnYAxis = allCells.filter { yValuesWithTetris.contains(it.y) }
             tetrisWorld.blocks.forEach { it.cells.removeAll(cellsOnYAxis) }
+
+            // Drop TODO
+            val fallingBlocks = getFallingBlocks()
+            while(fallingBlocks.isNotEmpty()) {
+                fallingBlocks.forEach { it.move(0, -1) }
+            }
+
+            // Create a new player block
+            spawnBlock()
         }
     }
 
@@ -118,7 +125,7 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
         block.cells.forEach {
             if(it.x > (TetrisWorld.GRID_WIDTH - 1)
                     || it.x < 0
-                    || it.y < 1)
+                    || it.y < 0)
                 return false
         }
 
