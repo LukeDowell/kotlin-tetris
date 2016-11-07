@@ -12,7 +12,7 @@ import java.util.*
 class GameHandler(val tetrisWorld: TetrisWorld) {
 
     /** gravitational period, ie the amount of time in seconds it takes for a block to drop one unit */
-    var gravityPeriod = 1f
+    var gravityPeriod = 0.7f
     var timeToDrop = 0f // wub wub wub
 
     val startingBlockPosition: Point
@@ -38,6 +38,11 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
                 getPlayerBlock().move(0, -1)
             }
             else {
+
+                if(doesTetrisExist()) {
+                    processTetris()
+                }
+
                 spawnBlock() // TODO turn into a queue so we can see the 'next' block
 
                 if(!canDrop()) {
@@ -50,28 +55,29 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
 
             println(tetrisWorld.generateMatrix().toString())
         }
+    }
 
-        // Check for tetris
+    fun doesTetrisExist() : Boolean {
+        return getYValuesWithTetris().isNotEmpty()
+    }
+
+    fun processTetris() {
         val yValuesWithTetris = getYValuesWithTetris()
-        if(yValuesWithTetris.isNotEmpty()) {
-            TetrisGame.score += yValuesWithTetris.size * GameHandler.TETRIS_SCORE
+        TetrisGame.score += yValuesWithTetris.size * GameHandler.TETRIS_SCORE
 
-            // Gather
-            val allCells = mutableListOf<Point>()
-            tetrisWorld.blocks.forEach { allCells.addAll(it.cells) }
+        // Gather
+        val allCells = mutableListOf<Point>()
+        tetrisWorld.blocks.forEach { allCells.addAll(it.cells) }
 
-            // Destroy
-            val cellsOnYAxis = allCells.filter { yValuesWithTetris.contains(it.y) }
-            tetrisWorld.blocks.forEach { it.cells.removeAll(cellsOnYAxis) }
+        // Destroy
+        val cellsOnYAxis = allCells.filter { yValuesWithTetris.contains(it.y) }
+        tetrisWorld.blocks.forEach { it.cells.removeAll(cellsOnYAxis) }
 
-            // Drop TODO
-            val fallingBlocks = getFallingBlocks()
-            while(fallingBlocks.isNotEmpty()) {
-                fallingBlocks.forEach { it.move(0, -1) }
-            }
-
-            // Create a new player block
-            spawnBlock()
+        // Drop TODO
+        var fallingBlocks = getFallingBlocks()
+        while(fallingBlocks.isNotEmpty()) {
+            fallingBlocks.forEach { it.move(0, -1) }
+            fallingBlocks = getFallingBlocks()
         }
     }
 
@@ -106,7 +112,7 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
     /**
      * Wall kicks yo
      */
-    fun attemptToRotate(block : Block = getPlayerBlock(), clockwise : Boolean = true) {
+    fun attemptToRotate(block: Block = getPlayerBlock(), clockwise: Boolean = true) {
         val blockClone = block.clone()
         blockClone.rotate(clockwise)
 
@@ -143,9 +149,10 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
     fun getPlayerBlock() : Block = tetrisWorld.blocks.last()
 
     /**
-     * Gets a list of blocks THAT ARE NOT THE PLAYER that can also drop it like it's hotttt
+     * Gets a list of blocks that doesn't include the player block and that can also drop it like it's hotttt
      */
     fun getFallingBlocks() = tetrisWorld.blocks
-                .dropLast(1) // Remove player block
+                .filter { it != getPlayerBlock() }
                 .filter { canDrop(it) }
+
 }

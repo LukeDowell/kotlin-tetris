@@ -1,6 +1,6 @@
 package org.badgrades.tetris.world
 
-import org.badgrades.tetris.extension.Array2D
+import org.badgrades.tetris.model.Array2D
 import org.badgrades.tetris.model.Block
 import org.badgrades.tetris.model.BlockType
 import java.awt.Point
@@ -19,9 +19,7 @@ import java.awt.Point
  *        |            |
  *        |            |
  *        +------------+
- *              (GRID_WIDTH, GRID_HEIGHT)
- *
- * Apparently I need to learn to format documentation
+ *              (GRID_WIDTH-1, GRID_HEIGHT-1)
  */
 class TetrisWorld {
 

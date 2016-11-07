@@ -1,4 +1,4 @@
-package org.badgrades.tetris.extension
+package org.badgrades.tetris.model
 
 /**
  * http://stackoverflow.com/questions/28548647/create-generic-2d-array-in-kotlin
