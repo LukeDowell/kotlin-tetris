@@ -58,8 +58,8 @@ class WorldRenderer(val tetrisWorld: TetrisWorld) {
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
 
-        // For each block
-        tetrisWorld.blocks.forEach { block ->
+        // For each placed block
+        tetrisWorld.placedBlocks.forEach { block ->
             val color = block.blockType.color
             // Draw each cell
             block.cells.forEach { cell: Point ->
@@ -72,13 +72,24 @@ class WorldRenderer(val tetrisWorld: TetrisWorld) {
                 )
             }
         }
+
+        // Draw player block
+        tetrisWorld.playerBlock.cells.forEach { cell: Point ->
+            shapeRenderer.color = tetrisWorld.playerBlock.blockType.color
+            shapeRenderer.rect(
+                    (cell.x * VISUAL_UNITS),
+                    cell.y * VISUAL_UNITS - (VISUAL_UNITS / 2),
+                    VISUAL_UNITS,
+                    VISUAL_UNITS
+            )
+        }
         shapeRenderer.end()
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
         shapeRenderer.color = Color.BLACK
 
         // For each block
-        tetrisWorld.blocks.forEach { block ->
+        tetrisWorld.placedBlocks.forEach { block ->
             // Draw each cell
             block.cells.forEach { cell: Point ->
                 shapeRenderer.rect(
@@ -108,7 +119,7 @@ class WorldRenderer(val tetrisWorld: TetrisWorld) {
         )
 
         // For each block
-        tetrisWorld.blocks.forEach { block ->
+        tetrisWorld.placedBlocks.forEach { block ->
             // Draw each cell
             block.cells.forEach { cell: Point ->
                     font.draw(

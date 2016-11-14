@@ -5,6 +5,7 @@ import org.badgrades.tetris.model.BlockType
 import org.badgrades.tetris.world.TetrisWorld
 import java.awt.Point
 import java.util.*
+import java.util.stream.Collectors
 
 /**
  * Holds all of our game logic
@@ -18,7 +19,6 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
     val startingBlockPosition: Point
 
     companion object {
-        // TODO https://en.wikipedia.org/wiki/Tetris#Scoring
         const val TETRIS_SCORE = 100
     }
 
@@ -34,51 +34,51 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
         timeToDrop += delta
         if(timeToDrop >= gravityPeriod) {
 
-            if(canDrop()) {
-                getPlayerBlock().move(0, -1)
+            if(canDrop(tetrisWorld.playerBlock)) {
+                tetrisWorld.playerBlock.move(0, -1)
             }
             else {
+                tetrisWorld.placedBlocks.add(tetrisWorld.playerBlock)
+                tetrisWorld.playerBlock = Block.getRandom(startingBlockPosition)
 
-                if(doesTetrisExist()) {
-                    processTetris()
-                }
+                do {
+                    getYValuesWithTetris()
+                        .forEach { yValue -> processTetrisAtY(yValue) } // TODO there is a bug here
+                } while (getYValuesWithTetris().isNotEmpty())
 
-                spawnBlock() // TODO turn into a queue so we can see the 'next' block
 
-                if(!canDrop()) {
+                if(!canDrop(tetrisWorld.playerBlock)) {
                     // Game over
                     System.exit(0)
                 }
             }
 
             timeToDrop = 0f
-
-            println(tetrisWorld.generateMatrix().toString())
         }
     }
-
-    fun doesTetrisExist() : Boolean {
-        return getYValuesWithTetris().isNotEmpty()
-    }
-
-    fun processTetris() {
-        val yValuesWithTetris = getYValuesWithTetris()
-        TetrisGame.score += yValuesWithTetris.size * GameHandler.TETRIS_SCORE
-
+    fun processTetrisAtY(y: Int) {
+        println("Processing tetris at ${y}")
         // Gather
-        val allCells = mutableListOf<Point>()
-        tetrisWorld.blocks.forEach { allCells.addAll(it.cells) }
+        val cellsOnY = tetrisWorld.placedBlocks
+            .map { it.cells }
+            .flatten()
+            .filter {
+                it.y == y
+            }
 
         // Destroy
-        val cellsOnYAxis = allCells.filter { yValuesWithTetris.contains(it.y) }
-        tetrisWorld.blocks.forEach { it.cells.removeAll(cellsOnYAxis) }
+        tetrisWorld.placedBlocks
+            .forEach { it.cells.removeAll(cellsOnY) }
 
         // Drop TODO
-        var fallingBlocks = getFallingBlocks()
-        while(fallingBlocks.isNotEmpty()) {
-            fallingBlocks.forEach { it.move(0, -1) }
-            fallingBlocks = getFallingBlocks()
-        }
+        tetrisWorld.placedBlocks
+            .map { it.cells }
+            .flatten()
+            .filter { it.y >= y }
+            .forEach { it.move(it.x, (it.y-1)) }
+
+        // Score
+        TetrisGame.score += TETRIS_SCORE
     }
 
     fun getYValuesWithTetris() = (0..TetrisWorld.GRID_HEIGHT-1).filter { doesTetrisExistAtY(it) }
@@ -88,38 +88,37 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
         return (0..TetrisWorld.GRID_WIDTH-1).none { x -> matrix[x, y] != 1 }
     }
 
-    fun spawnBlock() = tetrisWorld.blocks.add(getRandomBlock())
-
-    fun getRandomBlock() : Block {
-        val randomBlockType = BlockType.values()[Random().nextInt(BlockType.values().size)]
-        return Block(randomBlockType, startingBlockPosition.clone() as Point)
-    }
-
-    fun canDrop(block: Block = getPlayerBlock()) : Boolean {
+    fun canDrop(block: Block) : Boolean {
         val blockClone = block.clone()
         blockClone.move(0, -1)
         return isBlockPositionValid(blockClone)
     }
 
-    fun attemptToMove(dx: Int, dy: Int, block: Block = getPlayerBlock()) {
+    fun attemptToMove(dx: Int, dy: Int, block: Block = tetrisWorld.playerBlock) : Boolean {
         val blockClone = block.clone()
         blockClone.move(dx, dy)
 
-        if(isBlockPositionValid(blockClone))
+        if(isBlockPositionValid(blockClone)) {
             block.move(dx, dy)
+            return true
+        }
+
+        return false
     }
 
     /**
      * Wall kicks yo
      */
-    fun attemptToRotate(block: Block = getPlayerBlock(), clockwise: Boolean = true) {
+    fun attemptToRotate(block: Block = tetrisWorld.playerBlock, clockwise: Boolean = true) : Boolean {
         val blockClone = block.clone()
         blockClone.rotate(clockwise)
 
-        if(isBlockPositionValid(blockClone))
+        if(isBlockPositionValid(blockClone)) {
             block.rotate(clockwise)
-        else
-            println("wall kick")// How do we determine that it's a wall kick and not a 'block' kick?
+            return true
+        }
+
+        return false
     }
 
     /**
@@ -136,23 +135,11 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
         }
 
         // Intersect
-        tetrisWorld.blocks
-                .dropLast(1) // Remove the player block, it will always intersect with itself
+        tetrisWorld.placedBlocks // Remove the player block, it will always intersect with itself
                 .forEach {
                     if(block.intersectsWith(it))
                         return false
                 }
         return true
     }
-
-
-    fun getPlayerBlock() : Block = tetrisWorld.blocks.last()
-
-    /**
-     * Gets a list of blocks that doesn't include the player block and that can also drop it like it's hotttt
-     */
-    fun getFallingBlocks() = tetrisWorld.blocks
-                .filter { it != getPlayerBlock() }
-                .filter { canDrop(it) }
-
 }

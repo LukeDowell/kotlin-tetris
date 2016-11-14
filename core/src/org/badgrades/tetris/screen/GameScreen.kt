@@ -18,7 +18,6 @@ class GameScreen(val tetrisGame: TetrisGame, val tetrisWorld: TetrisWorld) : Scr
         gameHandler = GameHandler(tetrisWorld)
         renderer = WorldRenderer(tetrisWorld)
         Gdx.input.inputProcessor = InputHandler(gameHandler)
-        gameHandler.spawnBlock()
     }
 
     override fun render(delta: Float) {

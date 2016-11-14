@@ -23,14 +23,22 @@ import java.awt.Point
  */
 class TetrisWorld {
 
+    /** The current player controlled block */
+    var playerBlock: Block = Block.getRandom(STARTING_BLOCK_POSITION)
+
     /** A collection of active blocks, i.e blocks that are visible on the screen */
-    val blocks = mutableListOf<Block>()
+    val placedBlocks = mutableListOf<Block>()
 
     companion object {
         /** The buffer gives us space to place a piece before it comes into view */
         const val GRID_BUFFER = 4
         const val GRID_HEIGHT = 20
         const val GRID_WIDTH = 10
+
+        val STARTING_BLOCK_POSITION = Point(
+                Math.round(TetrisWorld.GRID_WIDTH.toDouble() / 2).toInt(),
+                TetrisWorld.GRID_HEIGHT - 1
+        )
     }
 
     /**
@@ -40,7 +48,7 @@ class TetrisWorld {
     fun generateMatrix() : Array2D<Int> {
         val matrix = Array2D<Int>(GRID_WIDTH, GRID_HEIGHT) { x, y -> 0 }
 
-        blocks.forEach { block ->
+        placedBlocks.forEach { block ->
             block.cells.forEach { cell ->
                 matrix[cell.x, cell.y] = 1
             }

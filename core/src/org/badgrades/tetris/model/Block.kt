@@ -2,6 +2,7 @@ package org.badgrades.tetris.model
 
 import java.awt.Point
 import java.awt.geom.AffineTransform
+import java.util.*
 
 /**
  * A block is just a collection of filled points generated from a list of "offest points"
@@ -10,6 +11,13 @@ import java.awt.geom.AffineTransform
 class Block(val blockType: BlockType, startingPosition: Point) : Cloneable {
 
     val cells: MutableList<Point>
+
+    companion object {
+        fun getRandom(startingBlockPosition: Point) : Block {
+            val randomBlockType = BlockType.values()[Random().nextInt(BlockType.values().size)]
+            return Block(randomBlockType, startingBlockPosition.clone() as Point)
+        }
+    }
 
     init {
         cells = mutableListOf(startingPosition)
