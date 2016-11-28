@@ -24,7 +24,7 @@ import java.awt.Point
 class TetrisWorld {
 
     /** The current player controlled block */
-    var playerBlock: Block = Block.getRandom(STARTING_BLOCK_POSITION)
+    var playerBlock: Block = Block.getRandom(STARTING_POSITION)
 
     /** A collection of active blocks, i.e blocks that are visible on the screen */
     val placedBlocks = mutableListOf<Block>()
@@ -34,10 +34,9 @@ class TetrisWorld {
         const val GRID_BUFFER = 4
         const val GRID_HEIGHT = 20
         const val GRID_WIDTH = 10
-
-        val STARTING_BLOCK_POSITION = Point(
-                Math.round(TetrisWorld.GRID_WIDTH.toDouble() / 2).toInt(),
-                TetrisWorld.GRID_HEIGHT - 1
+        val STARTING_POSITION = Point(
+                Math.round(GRID_WIDTH.toDouble() / 2).toInt(), // Kind of gross to have all this conversion
+                GRID_HEIGHT - 1
         )
     }
 
@@ -53,6 +52,8 @@ class TetrisWorld {
                 matrix[cell.x, cell.y] = 1
             }
         }
+
+        playerBlock.cells.forEach { matrix[it.x, it.y] = 1 }
 
         return matrix
     }

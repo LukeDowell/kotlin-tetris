@@ -1,13 +1,10 @@
 package org.badgrades.tetris
 
 import org.badgrades.tetris.model.Block
-import org.badgrades.tetris.model.BlockType
 import org.badgrades.tetris.world.TetrisWorld
-import java.awt.Point
 import java.util.*
-import java.util.stream.Collectors
 
-/**
+/**a
  * Holds all of our game logic
  */
 class GameHandler(val tetrisWorld: TetrisWorld) {
@@ -15,37 +12,43 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
     /** gravitational period, ie the amount of time in seconds it takes for a block to drop one unit */
     var gravityPeriod = 0.7f
     var timeToDrop = 0f // wub wub wub
-
-    val startingBlockPosition: Point
+    var blockQueue: Queue<Block> = LinkedList<Block>()
+    var isRunning = false
 
     companion object {
         const val TETRIS_SCORE = 100
+        const val QUEUE_SIZE = 40
     }
 
     init {
-        startingBlockPosition = Point(
-                Math.round(TetrisWorld.GRID_WIDTH.toDouble() / 2).toInt(), // Kind of gross to have all this conversion
-                TetrisWorld.GRID_HEIGHT - 1
-        )
+
+
+        (0..QUEUE_SIZE)
+                .forEach { blockQueue.add(Block.getRandom(TetrisWorld.STARTING_POSITION)) }
+    }
+
+    fun start() {
+        tetrisWorld.playerBlock = blockQueue.remove()
+        isRunning = true
     }
 
     fun update(delta: Float) {
         // Drop block
         timeToDrop += delta
-        if(timeToDrop >= gravityPeriod) {
+        if(timeToDrop >= gravityPeriod && isRunning) {
 
             if(canDrop(tetrisWorld.playerBlock)) {
                 tetrisWorld.playerBlock.move(0, -1)
             }
             else {
                 tetrisWorld.placedBlocks.add(tetrisWorld.playerBlock)
-                tetrisWorld.playerBlock = Block.getRandom(startingBlockPosition)
+                tetrisWorld.playerBlock = Block.getRandom(TetrisWorld.STARTING_POSITION)
 
-                do {
-                    getYValuesWithTetris()
-                        .forEach { yValue -> processTetrisAtY(yValue) } // TODO there is a bug here
-                } while (getYValuesWithTetris().isNotEmpty())
-
+                var yValuesWithTetris = getYValuesWithTetris()
+                while (yValuesWithTetris.isNotEmpty()) {
+                    yValuesWithTetris.forEach { processTetrisAtY(it) } // TODO there is a bug here
+                    yValuesWithTetris = getYValuesWithTetris()
+                }
 
                 if(!canDrop(tetrisWorld.playerBlock)) {
                     // Game over
@@ -54,8 +57,11 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
             }
 
             timeToDrop = 0f
+        } else {
+            //TODO display paused message
         }
     }
+
     fun processTetrisAtY(y: Int) {
         println("Processing tetris at ${y}")
         // Gather
@@ -85,7 +91,7 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
 
     fun doesTetrisExistAtY(y: Int) : Boolean {
         val matrix = tetrisWorld.generateMatrix()
-        return (0..TetrisWorld.GRID_WIDTH-1).none { x -> matrix[x, y] != 1 }
+        return (0..TetrisWorld.GRID_WIDTH-1).all { x -> matrix[x, y] == 1 }
     }
 
     fun canDrop(block: Block) : Boolean {
@@ -135,7 +141,7 @@ class GameHandler(val tetrisWorld: TetrisWorld) {
         }
 
         // Intersect
-        tetrisWorld.placedBlocks // Remove the player block, it will always intersect with itself
+        tetrisWorld.placedBlocks
                 .forEach {
                     if(block.intersectsWith(it))
                         return false
